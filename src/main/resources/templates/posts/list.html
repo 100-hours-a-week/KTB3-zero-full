@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>게시글 목록</title>
+</head>
+<body>
+<h1>게시글 목록 </h1>
+
+<!-- 로그인 상태/비로그인 상태에 따른 버튼 토글 -->
+<div th:if="${currentUser == null}">
+    <a th:href="@{/users/login}">로그인</a>  <!-- ★ /users/login -->
+    <a th:href="@{/users/signup}">회원가입</a> <!-- ★ /users/signup -->
+</div>
+<div th:if="${currentUser != null}">
+    <span th:text="${currentUser.displayName != null ? currentUser.displayName : currentUser.username}">나</span> 님
+    <form th:action="@{/users/logout}" method="post" style="display:inline"> <!-- ★ /users/logout -->
+        <button type="submit">로그아웃</button>
+    </form>
+    |
+    <a th:href="@{/posts/new}">새 글 작성</a>
+</div>
+
+<table border="1" cellspacing="0" cellpadding="8">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>제목</th>
+        <th>작성자</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="post : ${posts}">
+        <td th:text="${post.id}">1</td>
+        <td><a th:href="@{|/posts/${post.id}|}" th:text="${post.title}">제목</a></td>
+        <td th:text="${post.author}">작성자</td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

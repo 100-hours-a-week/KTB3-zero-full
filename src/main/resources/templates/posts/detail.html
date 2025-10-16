@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${post.title}">게시글 상세</title>
+</head>
+<body>
+<h1 th:text="${post.title}">제목</h1>
+<p><strong>작성자: </strong><span th:text="${post.author}">작성자</span></p>
+<p><strong>태그: </strong><span th:text="${post.tags}">spring,hello</span></p>
+<p><strong>내용: </strong></p>
+<p th:text="${post.content}">내용</p>
+
+<hr/>
+<p>
+    <a th:href="@{/posts}">목록으로 돌아가기</a>
+    <!-- ★ 소유자에게만 '수정' 노출 -->
+    <span th:if="${currentUser != null and currentUser.userId == post.authorUserId}">
+    | <a th:href="@{|/posts/${post.id}/edit|}">수정</a>
+  </span>
+</p>
+
+<!-- ★ 소유자에게만 '삭제' 노출 -->
+<form th:if="${currentUser != null and currentUser.userId == post.authorUserId}"
+      th:action="@{|/posts/${post.id}|}" method="post"
+      onsubmit="return confirm('정말 삭제할까요?');">
+    <input type="hidden" name="_method" value="delete"/>
+    <button type="submit">삭제하기</button>
+</form>
+
+<hr/>
+<h2>댓글</h2>
+
+<div th:if="${#lists.isEmpty(comments)}">아직 댓글이 없습니다.</div>
+<ul th:if="${!#lists.isEmpty(comments)}">
+    <li th:each="c : ${comments}">
+        <b th:text="${c.author}">작성자</b> :
+        <span th:text="${c.content}">내용</span>
+
+        <!-- ★ 소유자에게만 댓글 '수정' 노출 -->
+        <span th:if="${currentUser != null and currentUser.userId == c.authorUserId}">
+      | <a th:href="@{|/posts/${post.id}/comments/${c.id}/edit|}">수정</a>
+    </span>
+
+        <!-- ★ 소유자에게만 댓글 '삭제' 노출 -->
+        <form th:if="${currentUser != null and currentUser.userId == c.authorUserId}"
+              th:action="@{|/posts/${post.id}/comments/${c.id}|}" method="post" style="display:inline"
+              onsubmit="return confirm('댓글을 삭제할까요?');">
+            <input type="hidden" name="_method" value="delete"/>
+            <button type="submit">삭제</button>
+        </form>
+    </li>
+</ul>
+
+<h3>댓글 작성</h3>
+<div th:if="${currentUser == null}">
+    <p>댓글을 쓰려면 <a th:href="@{/auth/login}">로그인</a>이 필요합니다.</p>
+</div>
+<form th:if="${currentUser != null}" th:action="@{|/posts/${post.id}/comments|}" method="post" th:object="${commentDto}">
+    <div>
+        <label>작성자:</label>
+        <span th:text="${currentUser.displayName != null ? currentUser.displayName : currentUser.username}">me</span>
+    </div>
+    <div>
+        <label>내용:</label>
+        <input type="text" th:field="*{content}" required>
+    </div>
+    <div style="margin-top:8px;">
+        <button type="submit">등록</button>
+    </div>
+</form>
+</body>
+</html>
