@@ -4,16 +4,17 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class PostDto {
-    Long postId;
-    String title;
-    String author;
-    String content;
+    private Long postId;
+    private String title;
+    private String writer;
+    private String content;
+    private Long writerId;
 
     public PostDto() {}
-    public PostDto(Long postId, String title, String author, String content) {
+    public PostDto(Long postId, String title, String writer, String content) {
         this.postId=postId;
         this.title=title;
-        this.author=author;
+        this.writer=writer;
         this.content=content;
     }
 
@@ -29,11 +30,11 @@ public class PostDto {
     public void setTitle(String title) { //title setter
         this.title=title;
     }
-    public String getAuthor() { //author getter
-        return author;
+    public String getWriter() { //author getter
+        return writer;
     }
-    public void setAuthor(String author) { //author setter
-        this.author=author;
+    public void setWriter(String writer) { //author setter
+        this.writer=writer;
     }
     public String getContent() { //content getter
         return content;
@@ -41,4 +42,5 @@ public class PostDto {
     public void setContent(String content) { //content setter
         this.content=content;
     }
+
 }

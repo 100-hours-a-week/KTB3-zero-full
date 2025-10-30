@@ -17,13 +17,22 @@ public class PostRepository {
         return postDto;
     }
 
-    public PostDto findById(Long id) { //id로 특정 PostDto 조회
-        return postRepository.get(id);
+    public void delete(Long id) {
+        postRepository.remove(id);
+    } //게시글 삭제
+
+    public PostDto update(Long id, PostDto postDto) {
+        postRepository.replace(id, postDto);
+        return postDto;
     }
 
+    public PostDto findById(Long id) { //id로 특정 PostDto 조회
+        return postRepository.get(id);
+    } //id 게시글 찾기
+
     public List<PostDto> findAll() { //모든 PostDto 조회
-       List<PostDto> list = new ArrayList<>(postRepository.values()); //list로 변환
-       return list;
+        List<PostDto> allPostsList = new ArrayList<>(postRepository.values()); //PostRepository 전체 리스트로 변환
+        return allPostsList;
     }
 
     @PostConstruct
@@ -31,7 +40,7 @@ public class PostRepository {
         if(postRepository.isEmpty()) { //repository 비어 있을 때 초기값
             save(new PostDto(null, "안녕하세요", "제로", "잘 부탁합니다."));
             save(new PostDto(null, "테스트", "홍길동", "잘 보이나요?? 댓글 부탁합니다"));
-    }
+        }
     }
 
 
