@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>회원 정보 수정 - 아무 말 대잔치</title>
+    <link rel="stylesheet" href="../static/css/styles.css">
+</head>
+<body>
+<div class="page">
+    <header class="app-header">
+        <div class="app-header__title">아무 말 대잔치</div>
+    </header>
+
+    <main class="page__body">
+        <section class="page-section card card--narrow">
+            <h1 class="section-title">회원정보수정</h1>
+
+            <!-- 프로필 이미지(동그란 영역)는 제거 -->
+
+            <form class="form">
+                <div class="form-row">
+                    <label class="form-label" for="edit-email">이메일</label>
+                    <input id="edit-email" type="email" class="input" value="samplecode@gmail.com" readonly>
+                    <p class="form-helper">이메일은 변경할 수 없습니다.</p>
+                </div>
+
+                <div class="form-row">
+                    <label class="form-label" for="edit-nickname">닉네임</label>
+                    <input id="edit-nickname" name="nickname" type="text" class="input" placeholder="닉네임을 입력해 주세요.">
+                    <p class="form-helper">* helper text</p>
+                </div>
+
+                <button type="submit" class="btn btn--primary btn--block" id="btnEdit">수정하기</button>
+            </form>
+
+            <div class="member-actions-row">
+                <a href="password-edit.html" class="link-text">비밀번호 변경</a>
+                <a href="#" class="link-text link-text--danger">회원 탈퇴</a>
+            </div>
+
+            <div style="margin-top: 24px; text-align: center;">
+                <button class="btn btn--secondary">수정 완료</button>
+            </div>
+        </section>
+    </main>
+
+    <!-- 회원 탈퇴 모달 예시 -->
+    <div class="modal-backdrop" id="withdrawModal">
+        <div class="modal">
+            <h2 class="modal-title">회원탈퇴 하시겠습니까?</h2>
+            <div class="modal-body">
+                작성한 게시글과 댓글은 삭제됩니다.
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn--secondary" type="button">취소</button>
+                <button class="btn btn--primary" type="button">확인</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../static/js/member-edit.js"></script>
+</body>
+</html>
