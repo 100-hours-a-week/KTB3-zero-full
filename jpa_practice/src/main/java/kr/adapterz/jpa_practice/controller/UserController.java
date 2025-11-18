@@ -1,9 +1,10 @@
 package kr.adapterz.jpa_practice.controller;
 
-
+import kr.adapterz.jpa_practice.dto.user.CreateUserRequest;
+import kr.adapterz.jpa_practice.dto.user.UpdateUserRequest;
+import kr.adapterz.jpa_practice.dto.user.UserResponse;
 import kr.adapterz.jpa_practice.entity.User;
 import kr.adapterz.jpa_practice.service.UserService;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,52 +16,28 @@ public class UserController {
 
     @PostMapping
     public UserResponse create(@RequestBody CreateUserRequest request) {
-        User saved = userService.create(request.email, request.password, request.nickname);
+        User saved = userService.create(
+                request.getEmail(),
+                request.getPassword(),
+                request.getNickname()
+        );
         return UserResponse.of(saved);
     }
 
-    @GetMapping(("/{id}"))
+    @GetMapping("/{id}")
     public UserResponse findById(@PathVariable Long id) {
         return UserResponse.of(userService.findById(id));
     }
 
     @PatchMapping("/{id}")
-    public UserResponse update(@PathVariable Long id, @RequestBody UpdateUserRequest request) {
-        User updatedUser = userService.update(id, request.nickname);
+    public UserResponse update(@PathVariable Long id,
+                               @RequestBody UpdateUserRequest request) {
+        User updatedUser = userService.update(id, request.getNickname());
         return UserResponse.of(updatedUser);
     }
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         userService.delete(id);
-    }
-
-    @Data
-    public static class UpdateUserRequest {
-        private String nickname;
-    }
-
-    @Data
-    public static class CreateUserRequest {
-        private String email;
-        private String password;
-        private String nickname;
-    }
-
-    @Data
-    public static class UserResponse {
-        private Long id;
-        private String email;
-        private String nickname;
-
-        public static UserResponse of(User user) {
-            return new UserResponse(user.getId(), user.getEmail(), user.getNickname());
-        }
-
-        public UserResponse(Long id, String email, String nickname) {
-            this.id = id;
-            this.email = email;
-            this.nickname = nickname;
-        }
     }
 }
