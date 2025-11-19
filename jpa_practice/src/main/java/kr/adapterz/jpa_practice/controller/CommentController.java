@@ -8,6 +8,7 @@ import kr.adapterz.jpa_practice.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,9 +32,14 @@ public class CommentController {
     @GetMapping
     public List<CommentResponse> getCommentsForPost(@PathVariable("postId") Long postId) {
         List<Comment> comments = commentService.findAllByPostId(postId);
-        return comments.stream()
-                .map(CommentResponse::of)
-                .collect(Collectors.toList());
+        List<CommentResponse> result = new ArrayList<>();
+
+        for(int i=0; i<comments.size(); i++) {
+            Comment comment = comments.get(i);
+            CommentResponse dto = CommentResponse.of(comment);
+            result.add(dto);
+        }
+        return result;
     }
 
     @GetMapping("/{commentId}")

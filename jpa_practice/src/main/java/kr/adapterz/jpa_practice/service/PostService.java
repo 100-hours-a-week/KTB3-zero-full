@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -24,6 +26,10 @@ public class PostService {
 
     public Post findById(Long id) {
         return postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("post not found"));
+    }
+
+    public List<Post> findAll() {
+        return postRepository.findAllByOrderByIdDesc();
     }
 
     @Transactional
