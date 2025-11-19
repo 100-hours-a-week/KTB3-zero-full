@@ -7,4 +7,8 @@ public class CreatePostRequest {
     private Long writerId;
     private String title;
     private String content;
+
+    public CreatePostRequest() {}
 }
+
+

@@ -1,17 +1,18 @@
 package kr.adapterz.jpa_practice.controller;
 
+import jakarta.persistence.EntityNotFoundException;
 import kr.adapterz.jpa_practice.dto.post.CreatePostRequest;
 import kr.adapterz.jpa_practice.dto.post.PostResponse;
 import kr.adapterz.jpa_practice.dto.post.UpdatePostRequest;
 import kr.adapterz.jpa_practice.entity.Post;
 import kr.adapterz.jpa_practice.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/api/v1/posts")
@@ -26,30 +27,38 @@ public class PostController {
         List<Post> posts = postService.findAll();
         List<PostResponse> result = new ArrayList<>();
 
-        for (int i=0; i<posts.size(); i++) {
+        for (int i = 0; i < posts.size(); i++) {
             Post post = posts.get(i);
             PostResponse dto = PostResponse.of(post);
             result.add(dto);
         }
         return result;
     }
+
     //게시글 작성
     @PostMapping
-    public PostResponse create(@RequestBody CreatePostRequest request) {
+    public ResponseEntity<PostResponse> create(@RequestBody CreatePostRequest request) {
         Post post = postService.create(
                 request.getWriterId(),
                 request.getTitle(),
                 request.getContent()
         );
-        return PostResponse.of(post);
+
+        Long createdPostId = post.getId();
+        URI location = URI.create("/api/v1/posts/" + createdPostId);
+        return ResponseEntity.created(location).body(PostResponse.of(post));
     }
 
-    //특정 게시글 조회
+    //{postId} 게시글 조회
     @GetMapping("/{postId}")
-    public PostResponse get(@PathVariable Long postId) {
-        return PostResponse.of(postService.findById(postId));
+    public ResponseEntity<PostResponse> getPostDetail(@PathVariable Long postId) {
+        try {
+            PostResponse post = PostResponse.of(postService.findById(postId));
+            return ResponseEntity.ok(post); //게시글 있으면 상태 코드 200 + 데이터 반환
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build(); //게시글 없으면 상태 코드 404
+        }
     }
-
     //게시글 업데이트
     @PatchMapping("/{postId}")
     public PostResponse update(@PathVariable Long postId,
