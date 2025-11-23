@@ -30,7 +30,8 @@ public class Post {
     @JoinColumn(name = "user_id") //post.user_id -> user.user_id
     private User writer;
 
-    @OneToMany(mappedBy = "post")
+    //댓글도 같이 삭제되도록 cascade + orphanRemoval
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
     protected Post() {}
@@ -53,8 +54,4 @@ public class Post {
         this.writer = writer;
         writer.getPosts().add(this);
     }
-
-
-
-
 }

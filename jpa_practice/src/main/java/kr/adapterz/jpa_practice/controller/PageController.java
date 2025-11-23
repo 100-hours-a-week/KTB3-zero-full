@@ -21,4 +21,31 @@ public class PageController {
     public String postDetailPage(@PathVariable Long postId) {
         return "post-detail";
     }
+
+    @GetMapping("/posts/{postId}/edit")
+    public String editPostPage(@PathVariable Long postId) {
+        // 새 글 폼과 같은 템플릿 재사용
+        return "post-new";
+    }
+
+    @GetMapping("/login")
+    public String loginPage() {
+        return "login";
+    }
+
+    @GetMapping("/signup")
+    public String signupPage() {
+        return "signup";
+    }
+
+    @GetMapping("/members/edit")
+    public String memberEditPage() {
+        return "member-edit";
+    }
+
+    @GetMapping("/members/password")
+    public String passwordEditPage() {
+        return "password-edit";
+    }
+
 }

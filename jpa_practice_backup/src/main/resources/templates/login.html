@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>로그인 - 아무 말 대잔치</title>
+    <link rel="stylesheet" href="../static/css/styles.css">
+</head>
+<body>
+<div class="page page--centered">
+    <header class="app-header">
+        <div class="app-header__title">아무 말 대잔치</div>
+    </header>
+
+    <main class="page__body">
+        <section class="page-section card card--narrow">
+            <h1 class="page-title">로그인</h1>
+
+            <form class="form">
+                <div class="form-row">
+                    <label class="form-label" for="login-email">이메일</label>
+                    <input id="login-email" name="email" type="email" class="input" placeholder="이메일을 입력해 주세요.">
+                </div>
+
+                <div class="form-row">
+                    <label class="form-label" for="login-password">비밀번호</label>
+                    <input id="login-password" name ="password" type="password" class="input" placeholder="비밀번호를 입력해 주세요.">
+                    <p class="form-helper">* helper text</p>
+                </div>
+
+                <button type="button" class="btn btn--primary btn--block" id="btnLogin">로그인</button>
+            </form>
+
+            <div class="auth-footer-link">
+                <a href="signup.html" class="link-text">회원가입</a>
+            </div>
+        </section>
+    </main>
+</div>
+<script src="../static/js/login.js"></script>
+</body>
+</html>

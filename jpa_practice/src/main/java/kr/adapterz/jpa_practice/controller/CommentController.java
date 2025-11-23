@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/posts/{postId}/comments")
@@ -56,6 +55,21 @@ public class CommentController {
 
     @DeleteMapping("/{commentId}")
     public void delete(@PathVariable Long commentId) {
+        commentService.delete(commentId);
+    }
+    //댓글 수정
+    //PATCH /api/v1/comments/{commentId}
+    @PatchMapping("/api/v1/comments/{commentId}")
+    public CommentResponse updateStandalone(@PathVariable Long commentId,
+                                            @RequestBody UpdateCommentRequest request) {
+        Comment updatedComment = commentService.update(commentId, request.getContent());
+        return CommentResponse.of(updatedComment);
+    }
+
+    //댓글 삭제
+    //DELETE /api/v1/comments/{commentId}
+    @DeleteMapping("/api/v1/comments/{commentId}")
+    public void deleteStandalone(@PathVariable Long commentId) {
         commentService.delete(commentId);
     }
 }

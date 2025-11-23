@@ -10,6 +10,19 @@
     <header class="app-header">
         <a href="post-detail.html" class="app-header__back">&lt;</a>
         <div class="app-header__title">아무 말 대잔치</div>
+
+        <div class="app-header__right">
+            <!-- 기본 프로필 버튼(이미지 없으니 글자/아이콘) -->
+            <button class="profile-menu-btn" id="profileMenuButton" type="button">🙂</button>
+
+            <!-- 드롭다운 메뉴 -->
+            <div class="profile-menu" id="profileMenu">
+                <div class="profile-menu__item" data-action="edit">회원정보수정</div>
+                <div class="profile-menu__item" data-action="password">비밀번호수정</div>
+                <div class="profile-menu__item profile-menu__item--danger" data-action="logout">로그아웃</div>
+            </div>
+        </div>
+
     </header>
 
     <main class="page__body">
@@ -45,5 +58,7 @@
                    </main>
                </div>
                <script src="../static/js/post-edit.js"></script>
+                <script src="/js/header-menu.js"></script>
+
                </body>
                </html>
