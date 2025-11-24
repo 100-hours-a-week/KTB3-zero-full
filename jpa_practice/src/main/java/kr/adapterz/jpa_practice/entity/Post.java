@@ -19,8 +19,12 @@ public class Post {
     private String title;
     private String content;
 
-    @Enumerated(EnumType.STRING)
-    private PostType postType;
+    private String country;
+    private String theme;
+    private String mood;
+    private Boolean isAnonymous = false;
+
+    private String imageUrl;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
