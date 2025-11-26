@@ -1,6 +1,5 @@
 package kr.adapterz.jpa_practice.controller;
 
-import jakarta.persistence.EntityNotFoundException;
 import kr.adapterz.jpa_practice.dto.post.CreatePostRequest;
 import kr.adapterz.jpa_practice.dto.post.PostResponse;
 import kr.adapterz.jpa_practice.dto.post.UpdatePostRequest;
@@ -50,24 +49,26 @@ public class PostController {
     public ResponseEntity<PostResponse> getPostDetail(@PathVariable Long postId) {
         try {
             Post post = postService.findById(postId);
-            PostResponse dto = PostResponse.of(post);
-
-            return ResponseEntity.ok(dto); //게시글 있으면 상태 코드 200 + 데이터 반환
+            return ResponseEntity.ok(PostResponse.of(post)); //게시글 있으면 상태 코드 200 + 데이터 반환
         } catch (IllegalArgumentException e) {
             return ResponseEntity.notFound().build(); //게시글 없으면 상태 코드 404
         }
     }
-    //게시글 업데이트
+    //게시글 수정
     @PatchMapping("/{postId}")
-    public PostResponse update(@PathVariable Long postId,
-                               @RequestBody UpdatePostRequest request) {
-        Post updatedPost = postService.update(postId, request);
-        return PostResponse.of(updatedPost);
+    public ResponseEntity<PostResponse> update(@PathVariable Long postId, @RequestBody UpdatePostRequest request) {
+        try {
+            Post post = postService.update(postId, request);
+            return ResponseEntity.ok(PostResponse.of(post));   // 200 OK
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();  // 404
+        }
     }
 
     //게시글 삭제
     @DeleteMapping("/{postId}")
-    public void delete(@PathVariable Long postId) {
+    public ResponseEntity<Void> delete(@PathVariable Long postId) {
         postService.delete(postId);
+        return ResponseEntity.noContent().build();  // 204 No Content
     }
 }

@@ -56,8 +56,4 @@ public class User {
         this.userRole = userRole;
     }
 
-    public void changeNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
 }

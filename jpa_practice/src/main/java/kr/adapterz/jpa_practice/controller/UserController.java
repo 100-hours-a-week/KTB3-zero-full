@@ -6,38 +6,57 @@ import kr.adapterz.jpa_practice.dto.user.UserResponse;
 import kr.adapterz.jpa_practice.entity.user.User;
 import kr.adapterz.jpa_practice.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
 
 @RestController
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
 public class UserController {
+
     private final UserService userService;
 
+    // 회원 가입
     @PostMapping
-    public UserResponse create(@RequestBody CreateUserRequest request) {
+    public ResponseEntity<UserResponse> create(@RequestBody CreateUserRequest request) {
         User saved = userService.create(
                 request.getEmail(),
                 request.getPassword(),
                 request.getNickname()
         );
-        return UserResponse.of(saved);
+
+        URI location = URI.create("/api/v1/users/" + saved.getId());
+        return ResponseEntity.created(location).body(UserResponse.of(saved));// 201
     }
 
+    // 회원 조회
     @GetMapping("/{id}")
-    public UserResponse findById(@PathVariable Long id) {
-        return UserResponse.of(userService.findById(id));
+    public ResponseEntity<UserResponse> findById(@PathVariable Long id) {
+        try {
+            User user = userService.findById(id);
+            return ResponseEntity.ok(UserResponse.of(user));// 200
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();// 404
+        }
     }
 
+    // 회원 정보 수정
     @PatchMapping("/{id}")
-    public UserResponse update(@PathVariable Long id,
-                               @RequestBody UpdateUserRequest request) {
-        User updatedUser = userService.update(id, request.getNickname());
-        return UserResponse.of(updatedUser);
+    public ResponseEntity<UserResponse> update(@PathVariable Long id, @RequestBody UpdateUserRequest request) {
+        try {
+            User updatedUser = userService.update(id, request.getNickname());
+            return ResponseEntity.ok(UserResponse.of(updatedUser));// 200
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();// 404
+        }
     }
 
-    @PatchMapping("/{id}") // 유저 삭제 x
-    public void delete(@PathVariable Long id) {
-
+    // 회원 탈퇴 - 회원 삭제X
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> withdraw(@PathVariable Long id) {
+        userService.withdraw(id);
+        return ResponseEntity.noContent().build();// 204
     }
 }

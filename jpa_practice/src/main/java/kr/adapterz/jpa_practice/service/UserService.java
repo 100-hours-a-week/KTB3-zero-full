@@ -30,7 +30,7 @@ public class UserService {
     public User update(Long id, String nickname) {
         User user = findById(id);
         if (nickname != null) {
-            user.changeNickname(nickname);
+            user.setNickname(nickname);
         }
         return user;
     }
