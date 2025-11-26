@@ -3,7 +3,7 @@ package kr.adapterz.jpa_practice.controller;
 import kr.adapterz.jpa_practice.dto.user.CreateUserRequest;
 import kr.adapterz.jpa_practice.dto.user.UpdateUserRequest;
 import kr.adapterz.jpa_practice.dto.user.UserResponse;
-import kr.adapterz.jpa_practice.entity.User;
+import kr.adapterz.jpa_practice.entity.user.User;
 import kr.adapterz.jpa_practice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -36,8 +36,8 @@ public class UserController {
         return UserResponse.of(updatedUser);
     }
 
-    @DeleteMapping("/{id}")
+    @PatchMapping("/{id}") // 유저 삭제 x
     public void delete(@PathVariable Long id) {
-        userService.delete(id);
+
     }
 }

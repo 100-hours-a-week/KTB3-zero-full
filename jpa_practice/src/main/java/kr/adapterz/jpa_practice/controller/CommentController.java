@@ -20,11 +20,9 @@ public class CommentController {
 
     @PostMapping
     public CommentResponse create(@RequestBody CreateCommentRequest request) {
-        Comment comment = commentService.create(
-                request.getWriterId(),
-                request.getPostId(),
-                request.getContent()
-        );
+        Comment comment = commentService.create(request);
+        Long createdCommentId = comment.getId();
+
         return CommentResponse.of(comment);
     }
 

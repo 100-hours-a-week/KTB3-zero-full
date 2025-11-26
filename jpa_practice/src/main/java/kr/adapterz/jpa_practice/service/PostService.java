@@ -1,7 +1,9 @@
 package kr.adapterz.jpa_practice.service;
 
-import kr.adapterz.jpa_practice.entity.Post;
-import kr.adapterz.jpa_practice.entity.User;
+import kr.adapterz.jpa_practice.dto.post.CreatePostRequest;
+import kr.adapterz.jpa_practice.dto.post.UpdatePostRequest;
+import kr.adapterz.jpa_practice.entity.post.Post;
+import kr.adapterz.jpa_practice.entity.user.User;
 import kr.adapterz.jpa_practice.repository.PostRepository;
 import kr.adapterz.jpa_practice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,9 +20,18 @@ public class PostService {
     private final UserRepository userRepository;
 
     @Transactional
-    public Post create (Long writerId, String title, String content) {
-        User writer = userRepository.findById(writerId).orElseThrow(() -> new IllegalArgumentException("user not found"));
-        Post post = new Post(title, content, writer);
+    public Post create (CreatePostRequest request) {
+        User writer = userRepository.findById(request.getWriterId()).orElseThrow(() -> new IllegalArgumentException("user not found"));
+        Post post = new Post(
+                request.getTitle(),
+                request.getContent(),
+                request.getCountry(),
+                request.getThemes(),
+                request.getMood(),
+                request.getIsAnonymous(),
+                writer
+        );
+
         return postRepository.save(post);
     }
 
@@ -33,10 +44,16 @@ public class PostService {
     }
 
     @Transactional
-    public Post update(Long id, String title, String content) {
+    public Post update(Long id, UpdatePostRequest request) {
         Post post = findById(id);
-        if (title != null) post.changeTitle(title);
-        if (content != null) post.changeContent(content);
+
+        if (request.getTitle() != null) post.setTitle(request.getTitle());
+        if (request.getContent() != null) post.setContent(request.getContent());
+        if (request.getCountry() != null) post.setCountry(request.getCountry());
+        if (request.getThemes() != null) post.setThemes(request.getThemes());
+        if (request.getMood() != null) post.setMood(request.getMood());
+        if (request.getIsAnonymous() != null) post.setIsAnonymous(request.getIsAnonymous());
+
         return post;
     }
 

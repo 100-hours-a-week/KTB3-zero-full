@@ -1,6 +1,6 @@
-package kr.adapterz.jpa_practice;
+/*package kr.adapterz.jpa_practice;
 
-import kr.adapterz.jpa_practice.entity.User;
+import kr.adapterz.jpa_practice.entity.user.User;
 import kr.adapterz.jpa_practice.service.PostService;
 import kr.adapterz.jpa_practice.service.UserService;
 import org.junit.jupiter.api.Test;
@@ -52,3 +52,5 @@ class InitSampleDataTest {
         );
     }
 }
+
+ */

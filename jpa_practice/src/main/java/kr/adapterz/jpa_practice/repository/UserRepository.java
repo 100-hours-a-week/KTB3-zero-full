@@ -1,6 +1,6 @@
 package kr.adapterz.jpa_practice.repository;
 
-import kr.adapterz.jpa_practice.entity.User;
+import kr.adapterz.jpa_practice.entity.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

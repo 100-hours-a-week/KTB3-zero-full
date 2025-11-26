@@ -1,6 +1,6 @@
 package kr.adapterz.jpa_practice.service;
 
-import kr.adapterz.jpa_practice.entity.User;
+import kr.adapterz.jpa_practice.entity.user.User;
 import kr.adapterz.jpa_practice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -36,8 +36,10 @@ public class UserService {
     }
 
     @Transactional
-    public void delete(Long id) {
-        userRepository.delete(findById(id));
+    public void withdraw(Long id) { //회원 탈퇴 - 회원 자체 삭제 X
+        User user = userRepository.findById(id)
+                        .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원"));
+        user.withdraw();
     }
 
 }

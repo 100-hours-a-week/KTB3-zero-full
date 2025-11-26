@@ -4,7 +4,7 @@ import jakarta.persistence.EntityNotFoundException;
 import kr.adapterz.jpa_practice.dto.post.CreatePostRequest;
 import kr.adapterz.jpa_practice.dto.post.PostResponse;
 import kr.adapterz.jpa_practice.dto.post.UpdatePostRequest;
-import kr.adapterz.jpa_practice.entity.Post;
+import kr.adapterz.jpa_practice.entity.post.Post;
 import kr.adapterz.jpa_practice.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -38,11 +38,7 @@ public class PostController {
     //게시글 작성
     @PostMapping
     public ResponseEntity<PostResponse> create(@RequestBody CreatePostRequest request) {
-        Post post = postService.create(
-                request.getWriterId(),
-                request.getTitle(),
-                request.getContent()
-        );
+        Post post = postService.create(request);
 
         Long createdPostId = post.getId();
         URI location = URI.create("/api/v1/posts/" + createdPostId);
@@ -53,9 +49,11 @@ public class PostController {
     @GetMapping("/{postId}")
     public ResponseEntity<PostResponse> getPostDetail(@PathVariable Long postId) {
         try {
-            PostResponse post = PostResponse.of(postService.findById(postId));
-            return ResponseEntity.ok(post); //게시글 있으면 상태 코드 200 + 데이터 반환
-        } catch (EntityNotFoundException e) {
+            Post post = postService.findById(postId);
+            PostResponse dto = PostResponse.of(post);
+
+            return ResponseEntity.ok(dto); //게시글 있으면 상태 코드 200 + 데이터 반환
+        } catch (IllegalArgumentException e) {
             return ResponseEntity.notFound().build(); //게시글 없으면 상태 코드 404
         }
     }
@@ -63,7 +61,7 @@ public class PostController {
     @PatchMapping("/{postId}")
     public PostResponse update(@PathVariable Long postId,
                                @RequestBody UpdatePostRequest request) {
-        Post updatedPost = postService.update(postId, request.getTitle(), request.getContent());
+        Post updatedPost = postService.update(postId, request);
         return PostResponse.of(updatedPost);
     }
 

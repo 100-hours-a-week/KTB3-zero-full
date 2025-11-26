@@ -1,10 +1,11 @@
-package kr.adapterz.jpa_practice.entity;
+package kr.adapterz.jpa_practice.entity.user;
 
 import jakarta.persistence.*;
+import kr.adapterz.jpa_practice.entity.Comment;
+import kr.adapterz.jpa_practice.entity.post.Post;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,8 +31,15 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
 
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    @Enumerated(EnumType.STRING)
+    private UserStatus status = UserStatus.ACTIVE;
+
+    public void withdraw() { //회원 탈퇴 처리
+        this.status = UserStatus.DELETED;
+        this.nickname = "탈퇴한 사용자";
+        this.email = null;
+        this.password = null;
+    }
 
     protected User() {}
 

@@ -1,6 +1,6 @@
 package kr.adapterz.jpa_practice.dto.user;
 
-import kr.adapterz.jpa_practice.entity.User;
+import kr.adapterz.jpa_practice.entity.user.User;
 import lombok.Data;
 
 @Data

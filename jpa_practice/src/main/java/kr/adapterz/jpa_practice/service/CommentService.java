@@ -1,8 +1,10 @@
 package kr.adapterz.jpa_practice.service;
 
+import kr.adapterz.jpa_practice.dto.comment.CreateCommentRequest;
+import kr.adapterz.jpa_practice.dto.comment.UpdateCommentRequest;
 import kr.adapterz.jpa_practice.entity.Comment;
-import kr.adapterz.jpa_practice.entity.Post;
-import kr.adapterz.jpa_practice.entity.User;
+import kr.adapterz.jpa_practice.entity.post.Post;
+import kr.adapterz.jpa_practice.entity.user.User;
 import kr.adapterz.jpa_practice.repository.CommentRepository;
 import kr.adapterz.jpa_practice.repository.PostRepository;
 import kr.adapterz.jpa_practice.repository.UserRepository;
@@ -21,10 +23,15 @@ public class CommentService {
     private final UserRepository userRepository;
 
     @Transactional
-    public Comment create (Long writerId, Long postId, String content) {
-        User writer = userRepository.findById(writerId).orElseThrow(() ->new IllegalArgumentException("user not found"));
-        Post post = postRepository.findById(postId).orElseThrow(() ->new IllegalArgumentException("post not found"));
-        Comment comment = new Comment(content, post, writer);
+    public Comment create (CreateCommentRequest request) {
+        User writer = userRepository.findById(request.getWriterId()).orElseThrow(() ->new IllegalArgumentException("user not found"));
+        Post post = postRepository.findById(request.getPostId()).orElseThrow(() ->new IllegalArgumentException("post not found"));
+        Comment comment = new Comment(
+                request.getContent(),
+                request.getIsAnonymous(),
+                post,
+                writer
+        );
         return commentRepository.save(comment);
     }
 
@@ -33,14 +40,17 @@ public class CommentService {
     }
 
     public List<Comment> findAllByPostId(Long postId) {
-        List<Comment> comments = commentRepository.findAllByPostId(postId);
-        return comments;
+        postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("post not found"));
+        return commentRepository.findAllByPostId(postId);
     }
 
     @Transactional
-    public Comment update(Long id, String content) {
+    public Comment update(Long id, UpdateCommentRequest request) {
         Comment comment = findById(id);
-        if (content != null) comment.changeContent(content);
+
+        if (request.getContent() != null) comment.setContent(request.getContent());
+        if (request.getIsAnonymous() != null) comment.setIsAnonymous(request.getIsAnonymous());
+
         return comment;
     }
 
