@@ -32,6 +32,8 @@ public class PostService {
                 writer
         );
 
+        post.setImageUrl(request.getImageUrl());
+
         return postRepository.save(post);
     }
 
@@ -52,6 +54,7 @@ public class PostService {
         if (request.getCountry() != null) post.setCountry(request.getCountry());
         if (request.getThemes() != null) post.setThemes(request.getThemes());
         if (request.getMood() != null) post.setMood(request.getMood());
+        if (request.getImageUrl() != null) post.setImageUrl(request.getImageUrl());
         if (request.getIsAnonymous() != null) post.setIsAnonymous(request.getIsAnonymous());
 
         return post;

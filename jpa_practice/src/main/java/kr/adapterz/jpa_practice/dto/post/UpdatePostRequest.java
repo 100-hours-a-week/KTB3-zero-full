@@ -13,6 +13,9 @@ public class UpdatePostRequest {
     private String country;
     private List<Theme> themes;
     private Mood mood;
+
+    private String imageUrl;
+
     private Boolean isAnonymous;
 
     public UpdatePostRequest() {

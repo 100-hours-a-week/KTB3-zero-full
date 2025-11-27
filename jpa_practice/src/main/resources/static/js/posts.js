@@ -7,7 +7,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const postListContainer = document.querySelector('.posts-list');
 
     if (!postListContainer) {
-        console.error("'.posts-list' 요소를 찾을 수 없습니다. posts.html에 div.posts-list가 있는지 확인하세요.");
+        console.error(
+            "'.posts-list' 요소를 찾을 수 없습니다. posts.html에 div.posts-list가 있는지 확인하세요."
+        );
         return;
     }
 
@@ -26,9 +28,10 @@ async function fetchPostList(postListContainer) {
         const posts = await response.json(); // JSON 배열
         renderPosts(posts, postListContainer);
     } catch (error) {
-        console.error("게시글 목록을 불러오는 데 실패했습니다:", error);
+        console.error('게시글 목록을 불러오는 데 실패했습니다:', error);
         if (postListContainer) {
-            postListContainer.innerHTML = '<p>데이터를 불러오는 중 오류가 발생했습니다.</p>';
+            postListContainer.innerHTML =
+                '<p>데이터를 불러오는 중 오류가 발생했습니다.</p>';
         }
     }
 }
@@ -36,25 +39,43 @@ async function fetchPostList(postListContainer) {
 // JSON 배열 → HTML 렌더링
 function renderPosts(posts, postListContainer) {
     if (!postListContainer) {
-        console.warn("renderPosts: postListContainer가 없습니다.");
+        console.warn('renderPosts: postListContainer가 없습니다.');
         return;
     }
 
     if (!posts || posts.length === 0) {
-        postListContainer.innerHTML = '<p>게시글이 없습니다. 첫 글을 작성해 보세요!</p>';
+        postListContainer.innerHTML =
+            '<p>게시글이 없습니다. 첫 글을 작성해 보세요!</p>';
         return;
     }
 
     // 목록 내용을 비우고, 새 데이터 채우기
     postListContainer.innerHTML = '';
 
-    // PostResponse: { id, title, content, writerId, writerNickname, ... }
+    // PostResponse: { id, title, content, writerId, writerNickname, imageUrl, createdAt, ... }
     posts.forEach(post => {
-        const postItemHtml = `
-            <article class="post-item" data-id="${post.id}">
-                <a href="/posts/${post.id}" class="post-item__link"></a>
+        const hasImage =
+            post.imageUrl && typeof post.imageUrl === 'string' && post.imageUrl.trim() !== '';
 
-                <div class="post-item__title">${post.title || '(제목 없음)'}</div>
+        const itemClass = hasImage
+            ? 'post-item post-item--with-image'
+            : 'post-item';
+
+        // 썸네일 HTML (imageUrl 있을 때만)
+        const thumbHtml = hasImage
+            ? `
+                <div class="post-item__thumb">
+                    <img src="${post.imageUrl}" alt="" />
+                </div>
+              `
+            : '';
+
+        // 텍스트 영역 HTML
+        const bodyHtml = `
+            <div class="post-item__body">
+                <div class="post-item__title">
+                    ${post.title || '(제목 없음)'}
+                </div>
 
                 <div class="post-item__meta">
                     <span>${post.createdAt || '날짜 정보 없음'}</span>
@@ -63,10 +84,19 @@ function renderPosts(posts, postListContainer) {
                 <div class="post-item__writer-row">
                     <span>작성자: ${post.writerNickname || '익명'}</span>
                 </div>
+            </div>
+        `;
+
+        const postItemHtml = `
+            <article class="${itemClass}" data-id="${post.id}">
+                <!-- 카드 전체 클릭용 링크 -->
+                <a href="/posts/${post.id}" class="post-item__link"></a>
+
+                ${thumbHtml}
+                ${bodyHtml}
             </article>
         `;
 
-        postListContainer.innerHTML += postItemHtml;
+        postListContainer.insertAdjacentHTML('beforeend', postItemHtml);
     });
 }
-

@@ -15,6 +15,9 @@ public class CreatePostRequest {
     private String country;
     private List<Theme> themes;
     private Mood mood;
+
+    private String imageUrl;
+
     private Boolean isAnonymous = false;
 
     public CreatePostRequest() {}

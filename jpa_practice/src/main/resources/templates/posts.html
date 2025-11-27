@@ -1,47 +1,73 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <title>게시글 목록 - 아무 말 대잔치</title>
-    <link rel="stylesheet" href="/css/styles.css">
+    <meta charset="UTF-8" />
+    <title>TravelHub - Travel Stories</title>
+    <link rel="stylesheet" href="/css/styles.css" />
 </head>
 <body>
 <div class="page">
+    <!-- 헤더 -->
     <header class="app-header">
-        <div class="app-header__title">아무 말 대잔치</div>
-        <div class="app-header__right">
-            <!-- 기본 프로필 버튼(이미지 없으니 글자/아이콘) -->
-            <button class="profile-menu-btn" id="profileMenuButton" type="button">🙂</button>
-
-            <!-- 드롭다운 메뉴 -->
-            <div class="profile-menu" id="profileMenu">
-                <div class="profile-menu__item" data-action="edit">회원정보수정</div>
-                <div class="profile-menu__item" data-action="password">비밀번호수정</div>
-                <div class="profile-menu__item profile-menu__item--danger" data-action="logout">로그아웃</div>
+        <!-- 왼쪽 로고 + 타이틀 -->
+        <div class="app-header__brand">
+            <div class="app-header__logo">✈️</div>
+            <div class="app-header__title">
+                <span>TravelHub</span>
+                <span class="app-header__subtitle">Share Your Journey</span>
             </div>
         </div>
 
+        <!-- 가운데 검색창 (나중에 기능 붙이면 됨) -->
+        <div class="app-header__search">
+            <input
+                    type="text"
+                    class="app-header__search-input"
+                    placeholder="Search posts..."
+            />
+        </div>
+
+        <!-- 오른쪽 프로필 / 로그아웃 / 새 글쓰기 -->
+        <div class="app-header__right">
+            <!-- 새 글쓰기 버튼 -->
+            <a href="/posts/new" class="btn btn--primary">
+                + New Post
+            </a>
+
+            <!-- 프로필 버튼: 일단 고정 이니셜, 나중에 로그인 붙이면 바꾸면 됨 -->
+            <button type="button" class="icon-circle-button profile-button">
+                HI
+            </button>
+
+            <!-- 로그아웃 버튼: 지금은 모양만 -->
+            <button type="button" class="text-button logout-button">
+                Logout
+            </button>
+
+        </div>
     </header>
 
+    <!-- 메인 -->
     <main class="page__body">
         <section class="page-section">
-            <p class="posts-header-text">
-                안녕하세요,<br>
-                <strong>아무 말 대잔치 게시판 입니다.</strong>
-            </p>
+            <header class="posts-header">
+                <h1 class="posts-title">Travel Stories</h1>
+                <p class="posts-subtitle">
+                    Discover experiences from travelers around the world
+                </p>
+            </header>
 
-            <div class="posts-toolbar">
-                <a href="/posts/new" class="btn btn--primary">게시글 작성</a>
-            </div>
+            <!-- 나중에 나라/테마 필터 넣을 수 있는 자리 -->
+            <!-- <div class="posts-filters">...</div> -->
 
+            <!-- 게시글 목록: JS가 이 안을 채움 -->
             <div class="posts-list">
-                <!-- JS가 여기를 싹 비우고, 실제 게시글들로 채울 거야 -->
+                <!-- posts.js 에서 .posts-list 기준으로 렌더링 -->
             </div>
         </section>
     </main>
 </div>
 
 <script src="/js/posts.js"></script>
-<script src="/js/header-menu.js"></script>
 </body>
 </html>
