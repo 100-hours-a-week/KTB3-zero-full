@@ -1,165 +1,107 @@
 // src/main/resources/static/js/post-new.js
 
 const POST_API_URL = '/api/v1/posts';
-
-// 현재 모드 플래그 & ID
-let isEditMode = false;
-let currentPostId = null;
+// 로그인 붙기 전까지 임시 writerId
+const TEMP_WRITER_ID = 1;
 
 document.addEventListener('DOMContentLoaded', () => {
-    const postForm = document.getElementById('postForm');
+    const moodGroup = document.getElementById('moodGroup');
+    const themeGroup = document.getElementById('themeGroup');
 
-    detectModeFromUrl();      // 새 글 / 수정 모드 판단
+    setupMoodSelection(moodGroup);
+    setupThemeSelection(themeGroup);
 
-    if (isEditMode) {
-        loadPostForEdit();    // 수정 모드면 기존 글 내용 불러오기
-    }
-
-    if (postForm) {
-        postForm.addEventListener('submit', handlePostSubmit);
-    }
+    console.log('post-new.js loaded');
 });
 
-/**
- * URL을 보고 지금이 새 글(/posts/new)인지, 수정(/posts/{id}/edit)인지 판단
- */
-function detectModeFromUrl() {
-    const path = window.location.pathname;                // /posts/new 또는 /posts/3/edit
-    const segments = path.split('/').filter(Boolean);     // ["posts","new"] 또는 ["posts","3","edit"]
+// Mood 단일 선택
+function setupMoodSelection(groupEl) {
+    if (!groupEl) return;
+    const chips = Array.from(groupEl.querySelectorAll('.choice-chip'));
 
-    const headerTitle = document.querySelector('.app-header__title');
-    const pageTitle = document.querySelector('.page-title');
-    const submitButton = document.querySelector('#postForm button[type="submit"]');
-
-    if (segments.length === 3 && segments[0] === 'posts' && segments[2] === 'edit') {
-        // /posts/{id}/edit  → 수정 모드
-        isEditMode = true;
-        currentPostId = segments[1];
-
-        if (headerTitle) headerTitle.textContent = '게시글 수정';
-        if (pageTitle) pageTitle.textContent = '게시글 수정';
-        if (submitButton) submitButton.textContent = '수정 완료';
-    } else {
-        // 그 외 → 새 글 모드
-        isEditMode = false;
-        currentPostId = null;
-
-        if (headerTitle) headerTitle.textContent = '새 게시글 작성';
-        if (pageTitle) pageTitle.textContent = '게시글 작성';
-        if (submitButton) submitButton.textContent = '작성 완료';
-    }
+    chips.forEach(chip => {
+        chip.addEventListener('click', () => {
+            chips.forEach(c => c.classList.remove('choice-chip--active'));
+            chip.classList.add('choice-chip--active');
+        });
+    });
 }
 
-/**
- * 수정 모드일 때 기존 게시글 데이터를 불러와서 폼에 채워 넣기
- */
-async function loadPostForEdit() {
-    if (!currentPostId) return;
+// Theme 다중 선택
+function setupThemeSelection(groupEl) {
+    if (!groupEl) return;
+    const chips = Array.from(groupEl.querySelectorAll('.choice-chip'));
+
+    chips.forEach(chip => {
+        chip.addEventListener('click', () => {
+            chip.classList.toggle('choice-chip--active');
+        });
+    });
+}
+
+function getSelectedMood() {
+    const active = document.querySelector('#moodGroup .choice-chip--active');
+    return active ? active.dataset.value : null; // QUIET / BUZZY ...
+}
+
+function getSelectedThemes() {
+    const actives = Array.from(
+        document.querySelectorAll('#themeGroup .choice-chip--active')
+    );
+    return actives.map(chip => chip.dataset.value); // ["PHOTO","ACTIVITY",...]
+}
+
+// 🔥 버튼에서 직접 호출: onclick="handleCreatePost()"
+async function handleCreatePost() {
+    const titleEl = document.getElementById('title');
+    const contentEl = document.getElementById('content');
+    const countryEl = document.getElementById('country');
+    const imageUrlEl = document.getElementById('imageUrl');
+    const isAnonymousEl = document.getElementById('isAnonymous');
+
+    const title = titleEl.value.trim();
+    const content = contentEl.value.trim();
+
+    if (!title || !content) {
+        alert('제목과 내용을 입력해 주세요.');
+        return;
+    }
+
+    const body = {
+        writerId: TEMP_WRITER_ID,
+        title,
+        content,
+        country: countryEl.value.trim() || null,
+        mood: getSelectedMood(),
+        themes: getSelectedThemes(),
+        isAnonymous: !!isAnonymousEl.checked,
+        imageUrl: imageUrlEl.value.trim() || null
+    };
+
+    console.log('create body:', body);
 
     try {
-        const response = await fetch(`${POST_API_URL}/${currentPostId}`);
+        const response = await fetch(POST_API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body)
+        });
 
         if (!response.ok) {
-            throw new Error(`게시글 불러오기 실패: ${response.status}`);
+            alert(`게시글 생성 실패 (status: ${response.status})`);
+            return;
         }
 
-        const post = await response.json();
-
-        const titleInput = document.getElementById('title');
-        const contentInput = document.getElementById('content');
-
-        if (titleInput) titleInput.value = post.title || '';
-        if (contentInput) contentInput.value = post.content || '';
-    } catch (error) {
-        console.error('게시글 데이터를 불러오는 중 오류 발생:', error);
-        alert('게시글 정보를 불러오는 데 실패했습니다.');
-    }
-}
-
-/**
- * 새 글 작성 + 수정 공용 submit 핸들러
- */
-async function handlePostSubmit(event) {
-    event.preventDefault(); // 기본 폼 제출(새로고침) 방지
-
-    const titleInput = document.getElementById('title');
-    const contentInput = document.getElementById('content');
-
-    const title = titleInput ? titleInput.value.trim() : '';
-    const content = contentInput ? contentInput.value.trim() : '';
-
-    if (!title) {
-        alert('제목을 입력해 주세요.');
-        return;
-    }
-    if (!content) {
-        alert('내용을 입력해 주세요.');
-        return;
-    }
-
-    try {
-        if (isEditMode && currentPostId) {
-            // ✅ 수정 모드 → PATCH /api/v1/posts/{id}
-            await updatePost(currentPostId, { title, content });
-            alert('게시글이 수정되었습니다.');
-            window.location.href = `/posts/${currentPostId}`;
+        const created = await response.json(); // PostResponse
+        if (created && created.id) {
+            window.location.href = `/posts/${created.id}`;
         } else {
-            // ✅ 새 글 작성 모드 → POST /api/v1/posts
-            const writerId = 1; // TODO: 나중에 로그인 붙이면 실제 사용자 ID로 교체
-            const newPostId = await createPost({ writerId, title, content });
-            alert('게시글이 성공적으로 작성되었습니다.');
-            window.location.href = `/posts/${newPostId}`;
+            window.location.href = '/posts';
         }
-    } catch (error) {
-        console.error('게시글 저장 중 오류 발생:', error);
-        alert('서버와의 통신 중 오류가 발생했습니다.');
-    }
-}
-
-/**
- * 새 게시글 생성 (POST /api/v1/posts)
- * body: { writerId, title, content }
- * 반환: 생성된 게시글 id
- */
-async function createPost(postData) {
-    const response = await fetch(POST_API_URL, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(postData)
-    });
-
-    if (!response.ok) {
-        if (response.status === 400) {
-            const error = await response.json();
-            alert(`작성 실패: ${error.message || '입력값을 확인해 주세요.'}`);
-        }
-        throw new Error(`게시글 작성 실패: ${response.status} ${response.statusText}`);
-    }
-
-    const result = await response.json();  // PostResponse
-    return result.id;                      // id 있어야 함
-}
-
-/**
- * 기존 게시글 수정 (PATCH /api/v1/posts/{id})
- * body: { title, content }
- */
-async function updatePost(postId, postData) {
-    const response = await fetch(`${POST_API_URL}/${postId}`, {
-        method: 'PATCH',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(postData)
-    });
-
-    if (!response.ok) {
-        if (response.status === 400) {
-            const error = await response.json();
-            alert(`수정 실패: ${error.message || '입력값을 확인해 주세요.'}`);
-        }
-        throw new Error(`게시글 수정 실패: ${response.status} ${response.statusText}`);
+    } catch (err) {
+        console.error('create error:', err);
+        alert('게시글 생성 중 오류가 발생했습니다.');
     }
 }

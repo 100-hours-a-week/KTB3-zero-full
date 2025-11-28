@@ -25,7 +25,7 @@ public class PageController {
     @GetMapping("/posts/{postId}/edit")
     public String editPostPage(@PathVariable Long postId) {
         // 새 글 폼과 같은 템플릿 재사용
-        return "post-new";
+        return "post-edit";
     }
 
     @GetMapping("/login")

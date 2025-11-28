@@ -6,7 +6,7 @@ const pwHelper = document.getElementById("pw-new-helper");
 const pwConfirmInput = document.getElementById("pw-confirm");
 const pwConfirmHelper = document.getElementById("pw-confirm-helper");
 
-const btnEdit = document.getElementById("btnEdit");
+const btnEditPw = document.getElementById("btnEdit");
 
 // 유효성 검사
 function isValidPassword(pw) {
@@ -35,19 +35,24 @@ function updateBtn() {
     const pw2 = pwConfirmInput.value.trim();
 
     const ok = isValidPassword(pw) && pw === pw2;
-    btnEdit.disabled = !ok;
+    btnEditPw.disabled = !ok;
 }
 
-btnEdit.disabled = true;
+if (btnEditPw) {
+    btnEditPw.disabled = true;
+}
 
 // 실시간 검증
-pwInput.addEventListener("input", () => {
+pwInput?.addEventListener("input", () => {
     const pw = pwInput.value.trim();
 
     if (!pw) {
         clearError(pwHelper);
     } else if (!isValidPassword(pw)) {
-        showError(pwHelper, "비밀번호는 8~20자, 대/소문자·숫자·특수문자를 모두 포함해야 합니다.");
+        showError(
+            pwHelper,
+            "비밀번호는 8~20자, 대/소문자·숫자·특수문자를 모두 포함해야 합니다."
+        );
     } else {
         clearError(pwHelper);
     }
@@ -63,7 +68,7 @@ pwInput.addEventListener("input", () => {
     updateBtn();
 });
 
-pwConfirmInput.addEventListener("input", () => {
+pwConfirmInput?.addEventListener("input", () => {
     const pw = pwInput.value.trim();
     const pw2 = pwConfirmInput.value.trim();
 
@@ -79,14 +84,17 @@ pwConfirmInput.addEventListener("input", () => {
 });
 
 // 수정하기 클릭
-btnEdit.addEventListener("click", async (e) => {
+btnEditPw?.addEventListener("click", async (e) => {
     e.preventDefault();
 
     const pw = pwInput.value.trim();
     const pw2 = pwConfirmInput.value.trim();
 
     if (!isValidPassword(pw)) {
-        showError(pwHelper, "비밀번호는 8~20자, 대/소문자·숫자·특수문자를 모두 포함해야 합니다.");
+        showError(
+            pwHelper,
+            "비밀번호는 8~20자, 대/소문자·숫자·특수문자를 모두 포함해야 합니다."
+        );
         return;
     }
     if (pw !== pw2) {
@@ -94,14 +102,11 @@ btnEdit.addEventListener("click", async (e) => {
         return;
     }
 
-    // 백엔드 비밀번호 변경 로직은 나중에
-    // TODO: PATCH /api/v1/users/{id}/password
-    showToast("수정 완료");
+    // TODO: 나중에 PATCH /api/v1/users/{id}/password 로 교체
+    showToast("비밀번호가 수정되었습니다.");
 });
 
-// ======================
 // 토스트
-// ======================
 function showToast(msg) {
     const toast = document.createElement("div");
     toast.textContent = msg;

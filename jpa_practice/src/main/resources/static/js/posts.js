@@ -55,7 +55,9 @@ function renderPosts(posts, postListContainer) {
     // PostResponse: { id, title, content, writerId, writerNickname, imageUrl, createdAt, ... }
     posts.forEach(post => {
         const hasImage =
-            post.imageUrl && typeof post.imageUrl === 'string' && post.imageUrl.trim() !== '';
+            post.imageUrl &&
+            typeof post.imageUrl === 'string' &&
+            post.imageUrl.trim() !== '';
 
         const itemClass = hasImage
             ? 'post-item post-item--with-image'
@@ -65,12 +67,15 @@ function renderPosts(posts, postListContainer) {
         const thumbHtml = hasImage
             ? `
                 <div class="post-item__thumb">
-                    <img src="${post.imageUrl}" alt="" />
+                    <img src="${post.imageUrl}" alt="post image" />
                 </div>
               `
             : '';
 
-        // 텍스트 영역 HTML
+        const displayDate = post.createdAt
+            ? timeAgo(post.createdAt)          // ⭐ 여기서 timeAgo 사용
+            : '날짜 정보 없음';
+
         const bodyHtml = `
             <div class="post-item__body">
                 <div class="post-item__title">
@@ -78,7 +83,7 @@ function renderPosts(posts, postListContainer) {
                 </div>
 
                 <div class="post-item__meta">
-                    <span>${post.createdAt || '날짜 정보 없음'}</span>
+                    <span>${displayDate}</span>
                 </div>
 
                 <div class="post-item__writer-row">
@@ -89,9 +94,7 @@ function renderPosts(posts, postListContainer) {
 
         const postItemHtml = `
             <article class="${itemClass}" data-id="${post.id}">
-                <!-- 카드 전체 클릭용 링크 -->
                 <a href="/posts/${post.id}" class="post-item__link"></a>
-
                 ${thumbHtml}
                 ${bodyHtml}
             </article>

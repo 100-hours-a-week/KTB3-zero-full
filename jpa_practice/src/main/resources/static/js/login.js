@@ -1,90 +1,56 @@
 // login.js
 
-const emailInput = document.getElementById("login-email");
-const emailHelper = document.getElementById("login-email-helper");
+// 실제 로그인 API 주소에 맞게 수정해서 사용해줘!
+const LOGIN_API_URL = '/api/v1/auth/login';
 
-const pwInput = document.getElementById("login-password");
-const pwHelper = document.getElementById("login-password-helper");
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('loginForm');
+    if (!form) return;
 
-const btnLogin = document.getElementById("btnLogin");
-
-// 유효성 검사
-function isValidEmail(email) {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(email);
-}
-
-// 로그인은 패스워드 규칙을 강하게 검사할 필요 없음
-// (회원가입에서 이미 강한 규칙 적용됨)
-function isNotEmpty(str) {
-    return str && str.trim().length > 0;
-}
-
-// helper 표시
-function showError(helperEl, msg) {
-    helperEl.textContent = msg;
-    helperEl.classList.add("form-helper--error");
-}
-
-function clearError(helperEl) {
-    helperEl.textContent = "";
-    helperEl.classList.remove("form-helper--error");
-}
-
-// 버튼 활성화
-function updateBtn() {
-    const email = emailInput.value.trim();
-    const pw = pwInput.value.trim();
-
-    const ok = isValidEmail(email) && isNotEmpty(pw);
-    btnLogin.disabled = !ok;
-}
-
-// 입력 이벤트
-emailInput.addEventListener("input", () => {
-    const email = emailInput.value.trim();
-
-    if (!email) {
-        clearError(emailHelper);
-    } else if (!isValidEmail(email)) {
-        showError(emailHelper, "올바른 이메일 주소를 입력해주세요. 예: example@example.com");
-    } else {
-        clearError(emailHelper);
-    }
-
-    updateBtn();
+    form.addEventListener('submit', onLoginSubmit);
 });
 
-pwInput.addEventListener("input", () => {
-    const pw = pwInput.value.trim();
+async function onLoginSubmit(e) {
+    e.preventDefault();
 
-    if (!pw) {
-        clearError(pwHelper);
-    } else {
-        clearError(pwHelper);
-    }
+    const emailEl = document.getElementById('loginEmail');
+    const passwordEl = document.getElementById('loginPassword');
 
-    updateBtn();
-});
+    const email = emailEl.value.trim();
+    const password = passwordEl.value.trim();
 
-// 로그인 버튼 클릭
-btnLogin.addEventListener("click", async () => {
-    const email = emailInput.value.trim();
-    const pw = pwInput.value.trim();
-
-    // 마지막 방어
-    if (!isValidEmail(email)) {
-        showError(emailHelper, "올바른 이메일 주소를 입력해주세요.");
-        return;
-    }
-    if (!isNotEmpty(pw)) {
-        showError(pwHelper, "비밀번호를 입력해주세요.");
+    if (!email || !password) {
+        alert('이메일과 비밀번호를 모두 입력해 주세요.');
         return;
     }
 
-    // 아직 백엔드는 없으니까 성공 처리만
-    // TODO: POST /api/v1/auth/login 으로 교체
-    alert("로그인 성공!");
-    window.location.href = "/posts";
-});
+    const body = { email, password };
 
+    try {
+        const res = await fetch(LOGIN_API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body),
+        });
+
+        if (!res.ok) {
+            alert(`로그인 실패 (status: ${res.status})`);
+            return;
+        }
+
+        const user = await res.json();
+        console.log('로그인 성공:', user);
+
+        // 임시: 로그인 유저 ID를 localStorage에 저장 (나중에 JWT/세션으로 교체)
+        if (user && user.id) {
+            localStorage.setItem('currentUserId', String(user.id));
+            localStorage.setItem('currentUserNickname', user.nickname || '');
+        }
+
+        // 로그인 성공 후 목록 페이지로 이동
+        window.location.href = '/posts';
+    } catch (err) {
+        console.error('로그인 에러:', err);
+        alert('로그인 중 오류가 발생했습니다.');
+    }
+}

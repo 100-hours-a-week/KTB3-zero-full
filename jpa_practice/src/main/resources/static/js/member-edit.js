@@ -31,10 +31,12 @@ function updateBtn() {
     btnEdit.disabled = !isValidNickname(nick);
 }
 
-btnEdit.disabled = true;
+if (btnEdit) {
+    btnEdit.disabled = true;
+}
 
 // 실시간 검증
-nickInput.addEventListener("input", () => {
+nickInput?.addEventListener("input", () => {
     const nick = nickInput.value.trim();
 
     if (!nick) {
@@ -48,8 +50,8 @@ nickInput.addEventListener("input", () => {
     updateBtn();
 });
 
-// 수정하기 클릭
-btnEdit.addEventListener("click", async (e) => {
+// 수정하기 클릭 (현재는 API 없이 토스트만)
+btnEdit?.addEventListener("click", async (e) => {
     e.preventDefault();
 
     const nick = nickInput.value.trim();
@@ -58,9 +60,8 @@ btnEdit.addEventListener("click", async (e) => {
         return;
     }
 
-    // 백엔드 로직 없으니 성공 처리만
-    // TODO: PATCH /api/v1/users/{id} 로 교체
-    showToast("수정 완료");
+    // TODO: 나중에 PATCH /api/v1/users/{id}로 교체
+    showToast("닉네임이 수정되었습니다.");
 });
 
 // 토스트
@@ -88,7 +89,7 @@ btnWithdrawOpen?.addEventListener("click", (e) => {
 });
 
 btnWithdrawCancel?.addEventListener("click", () => {
-    withdrawModal.classList.remove("is-open");
+    withdrawModal?.classList.remove("is-open");
 });
 
 withdrawModal?.addEventListener("click", (e) => {
@@ -96,8 +97,7 @@ withdrawModal?.addEventListener("click", (e) => {
 });
 
 btnWithdrawConfirm?.addEventListener("click", async () => {
-    // 백엔드 탈퇴는 나중에
-    // TODO: DELETE /api/v1/users/{id}
+    // TODO: 나중에 DELETE /api/v1/users/{id} 로 교체
     alert("회원 탈퇴가 완료되었습니다.");
     window.location.href = "/login";
 });

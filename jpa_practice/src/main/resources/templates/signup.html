@@ -1,75 +1,69 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>회원가입 - 아무 말 대잔치</title>
+    <title>Flio - Sign Up</title>
     <link rel="stylesheet" href="/css/styles.css">
 </head>
-<body>
-<div class="page page--centered">
-    <header class="app-header">
-        <a href="/login" class="app-header__back">&lt;</a>
-        <div class="app-header__title">아무 말 대잔치</div>
-    </header>
+<body class="page auth-page">
 
-    <main class="page__body">
-        <section class="page-section card card--narrow">
-            <h1 class="page-title">회원가입</h1>
+<main class="auth-container">
+    <section class="auth-card">
+        <!-- 로고 - 네모 박스 없이 깔끔하게 -->
+        <div class="auth-logo-wrapper">
+            <img src="/img/logo.png" alt="Flio logo" class="auth-logo">
+        </div>
 
-            <form class="form" id="signupForm">
-                <div class="form-row">
-                    <label class="form-label" for="signup-email">
-                        이메일<span class="required">*</span>
-                    </label>
-                    <input id="signup-email" name="email" type="email" class="input"
-                           placeholder="이메일을 입력해 주세요.">
-                    <!-- ✅ 여기 helper id 추가 -->
-                    <p class="form-helper" id="signup-email-helper"></p>
-                </div>
+        <h1 class="auth-title">Join Flio</h1>
+        <p class="auth-subtitle">Create your account</p>
 
-                <div class="form-row">
-                    <label class="form-label" for="signup-password">
-                        비밀번호<span class="required">*</span>
-                    </label>
-                    <input id="signup-password" name="password" type="password" class="input"
-                           placeholder="비밀번호를 입력해 주세요.">
-                    <!-- ✅ helper id 추가 -->
-                    <p class="form-helper" id="signup-password-helper"></p>
-                </div>
+        <!-- 회원가입 폼 -->
+        <form id="signupForm" class="auth-form">
+            <label class="auth-label">
+                Name
+                <input type="text" class="auth-input" placeholder="Enter your name" required>
+            </label>
 
-                <div class="form-row">
-                    <label class="form-label" for="signup-password-confirm">
-                        비밀번호 확인<span class="required">*</span>
-                    </label>
-                    <input id="signup-password-confirm" name="password-confirm" type="password" class="input"
-                           placeholder="비밀번호를 한 번 더 입력해 주세요.">
-                    <!-- ✅ helper id 추가 -->
-                    <p class="form-helper" id="signup-password-confirm-helper"></p>
-                </div>
+            <label class="auth-label">
+                Email
+                <input type="email" class="auth-input" placeholder="Enter your email" required>
+            </label>
 
-                <div class="form-row">
-                    <label class="form-label" for="signup-nickname">
-                        닉네임<span class="required">*</span>
-                    </label>
-                    <input id="signup-nickname" name="nickname" type="text" class="input"
-                           placeholder="닉네임을 입력해 주세요.">
-                    <!-- ✅ helper id 추가 -->
-                    <p class="form-helper" id="signup-nickname-helper"></p>
-                </div>
+            <label class="auth-label">
+                Password
+                <input type="password" class="auth-input" placeholder="Enter your password" required>
+            </label>
 
-                <!-- ✅ submit 말고 button으로 -->
-                <button type="button" class="btn btn--primary btn--block" id="btnSignup">
-                    회원가입
-                </button>
-            </form>
+            <label class="auth-label">
+                Confirm Password
+                <input type="password" class="auth-input" placeholder="Confirm your password" required>
+            </label>
 
-            <div class="auth-footer-link">
-                <a href="/login" class="link-text">로그인하러 가기</a>
-            </div>
-        </section>
-    </main>
-</div>
+            <button type="submit" class="btn-primary auth-submit-btn">
+                Sign Up
+            </button>
+        </form>
 
-<script src="/js/signup.js"></script>
+        <p class="auth-footer-text">
+            Already have an account?
+            <a href="/login" id="loginLink">Login</a>
+        </p>
+    </section>
+</main>
+
+<!-- 그냥 화면 이동만: 회원가입 성공했다고 치고 로그인 페이지로 -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const form = document.getElementById('signupForm');
+        if (!form) return;
+
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();  // 실제 요청 막기
+            // TODO: 나중에 실제 회원가입 API 붙이기
+            window.location.href = '/login';
+        });
+    });
+</script>
+
 </body>
 </html>
