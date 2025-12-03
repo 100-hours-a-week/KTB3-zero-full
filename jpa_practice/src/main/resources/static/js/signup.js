@@ -1,6 +1,4 @@
-// signup.js
-
-const SIGNUP_API_URL = '/api/v1/users'; // UserController.create()와 매칭
+const SIGNUP_API_URL = '/api/v1/auth/signup'; // AuthController.signup()과 매칭
 
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('signupForm');
@@ -39,7 +37,6 @@ async function onSignupSubmit(e) {
             return;
         }
 
-        // 필요하면 응답 JSON 확인
         const user = await res.json();
         console.log('회원가입 성공:', user);
 

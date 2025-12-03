@@ -18,18 +18,6 @@ public class UserController {
 
     private final UserService userService;
 
-    // 회원 가입
-    @PostMapping
-    public ResponseEntity<UserResponse> create(@RequestBody CreateUserRequest request) {
-        User saved = userService.create(
-                request.getEmail(),
-                request.getPassword(),
-                request.getNickname()
-        );
-
-        URI location = URI.create("/api/v1/users/" + saved.getId());
-        return ResponseEntity.created(location).body(UserResponse.of(saved));// 201
-    }
 
     // 회원 조회
     @GetMapping("/{id}")

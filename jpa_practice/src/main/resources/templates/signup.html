@@ -9,7 +9,6 @@
 
 <main class="auth-container">
     <section class="auth-card">
-        <!-- 로고 - 네모 박스 없이 깔끔하게 -->
         <div class="auth-logo-wrapper">
             <img src="/img/logo.png" alt="Flio logo" class="auth-logo">
         </div>
@@ -21,17 +20,17 @@
         <form id="signupForm" class="auth-form">
             <label class="auth-label">
                 Name
-                <input type="text" class="auth-input" placeholder="Enter your name" required>
+                <input id="signupNickname" type="text" class="auth-input" placeholder="Enter your name" required>
             </label>
 
             <label class="auth-label">
                 Email
-                <input type="email" class="auth-input" placeholder="Enter your email" required>
+                <input id="signupEmail" type="email" class="auth-input" placeholder="Enter your email" required>
             </label>
 
             <label class="auth-label">
                 Password
-                <input type="password" class="auth-input" placeholder="Enter your password" required>
+                <input id="signupPassword" type="password" class="auth-input" placeholder="Enter your password" required>
             </label>
 
             <label class="auth-label">
@@ -51,19 +50,8 @@
     </section>
 </main>
 
-<!-- 그냥 화면 이동만: 회원가입 성공했다고 치고 로그인 페이지로 -->
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const form = document.getElementById('signupForm');
-        if (!form) return;
-
-        form.addEventListener('submit', (event) => {
-            event.preventDefault();  // 실제 요청 막기
-            // TODO: 나중에 실제 회원가입 API 붙이기
-            window.location.href = '/login';
-        });
-    });
-</script>
+<!-- 예전의 "그냥 화면 이동" 스크립트는 삭제하고, JS 파일만 로드 -->
+<script src="/js/signup.js"></script>
 
 </body>
 </html>
