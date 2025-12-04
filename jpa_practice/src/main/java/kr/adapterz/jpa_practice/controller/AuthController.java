@@ -1,5 +1,7 @@
 package kr.adapterz.jpa_practice.controller;
 
+import kr.adapterz.jpa_practice.dto.auth.LoginRequest;
+import kr.adapterz.jpa_practice.dto.auth.LoginResponse;
 import kr.adapterz.jpa_practice.dto.user.CreateUserRequest;
 import kr.adapterz.jpa_practice.dto.user.UserResponse;
 import kr.adapterz.jpa_practice.entity.user.User;
@@ -25,4 +27,12 @@ public class AuthController {
         URI location = URI.create("/api/v1/users/" + saved.getId());
         return ResponseEntity.created(location).body(UserResponse.of(saved));
     }
+
+    //로그인
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
+
+    }
+
+
 }
