@@ -31,10 +31,17 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
                             session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                     )
                     .authorizeHttpRequests(auth -> auth
-                            .requestMatchers("/api/v1/auth/**", "/error").permitAll()
+                            .requestMatchers(
+                                    "/login", "/signup",
+                                    "/css/**", "/js/**", "/img/**", "/favicon.ico",
+                                    "/api/v1/auth/**",   // 로그인/회원가입 API
+                                    "/error"
+                            ).permitAll()
                             .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
-                            .anyRequest().authenticated()
+                            .requestMatchers("/api/v1/**").authenticated()  // API는 토큰 필요
+                            .anyRequest().permitAll()                      // 페이지는 일단 열어두기 -> 추후 수정 가능
                     )
+
                     .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
             return http.build();

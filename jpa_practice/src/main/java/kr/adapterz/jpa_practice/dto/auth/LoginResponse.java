@@ -1,6 +1,9 @@
 package kr.adapterz.jpa_practice.dto.auth;
 
+import lombok.Data;
+
+@Data
 public class LoginResponse {
-    private String accessToken;
-    private String refreshToken;
+    private final String accessToken;
+    private final String refreshToken;
 }

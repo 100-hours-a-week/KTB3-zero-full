@@ -19,6 +19,49 @@ document.addEventListener('DOMContentLoaded', () => {
 // 백엔드에서 게시글 목록 가져오기
 async function fetchPostList(postListContainer) {
     try {
+        // 1. localStorage에서 토큰을 꺼내기
+        const token = localStorage.getItem("accessToken");
+
+        // 2. 토큰이 없으면 로그인 페이지로 이동
+        if (!token) {
+            alert("로그인이 필요합니다.");
+            window.location.href = "/login";
+            return;
+        }
+
+        // 3. fetch 요청에 Authorization 헤더 포함하기
+        const response = await fetch(POST_API_URL, {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        });
+
+        // 4. 서버가 인증 실패한 경우
+        if (response.status === 401 || response.status === 403) {
+            alert("로그인이 필요한 서비스입니다.");
+            window.location.href = "/login";
+            return;
+        }
+
+        if (!response.ok) {
+            throw new Error(`HTTP 오류! 상태: ${response.status}`);
+        }
+
+        const posts = await response.json(); // JSON 배열
+        renderPosts(posts, postListContainer);
+
+    } catch (error) {
+        console.error('게시글 목록을 불러오는 데 실패했습니다:', error);
+        if (postListContainer) {
+            postListContainer.innerHTML =
+                '<p>데이터를 불러오는 중 오류가 발생했습니다.</p>';
+        }
+    }
+}
+
+// 백엔드에서 게시글 목록 가져오기
+async function fetchPostList(postListContainer) {
+    try {
         const response = await fetch(POST_API_URL);
 
         if (!response.ok) {

@@ -28,11 +28,12 @@ public class AuthController {
         return ResponseEntity.created(location).body(UserResponse.of(saved));
     }
 
-    //로그인
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
-
+        LoginResponse tokens = authService.login(request);
+        return ResponseEntity.ok(tokens);
     }
+
 
 
 }

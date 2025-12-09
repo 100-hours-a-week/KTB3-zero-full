@@ -34,5 +34,23 @@ public class CustomUserDetails implements UserDetails {
         return List.of(new SimpleGrantedAuthority(roleName));
     }
 
-    // 나머지 isAccountNonExpired, isAccountNonLocked 등은 일단 true 리턴하게 해도 됨
+    @Override
+    public boolean isAccountNonExpired() {
+        return true; // 계정 만료 기능 안 쓸 거면 true 고정
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true; // 잠금 기능 안 쓰면 true
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true; // 비밀번호 만료 기능 안 쓰면 true
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true; // 활성/비활성 기능 안 쓰면 true
+    }
 }

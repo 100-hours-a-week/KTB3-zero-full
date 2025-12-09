@@ -22,12 +22,14 @@
         <form id="loginForm" class="auth-form">
             <label class="auth-label">
                 Email
-                <input type="email" class="auth-input" placeholder="Enter your email" required>
+                <input id="loginEmail" type="email" class="auth-input"
+                       placeholder="Enter your email" required>
             </label>
 
             <label class="auth-label">
                 Password
-                <input type="password" class="auth-input" placeholder="Enter your password" required>
+                <input id="loginPassword" type="password" class="auth-input"
+                       placeholder="Enter your password" required>
             </label>
 
             <button type="submit" class="btn-primary auth-submit-btn">
@@ -42,19 +44,8 @@
     </section>
 </main>
 
-<!-- 실제 인증 없이 그냥 /posts로 이동 -->
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const form = document.getElementById('loginForm');
-        if (!form) return;
+<script src="/js/login.js"></script>
 
-        form.addEventListener('submit', (event) => {
-            event.preventDefault();   // 실제 요청 막기
-            // TODO: 나중에 로그인 API 붙이기
-            window.location.href = '/posts';
-        });
-    });
-</script>
 
 </body>
 </html>

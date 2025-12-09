@@ -7,7 +7,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update   # 개발 중에는 create / create-drop / update 중 선택
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: true
@@ -15,3 +15,6 @@ spring:
 logging:
   level:
     org.hibernate.SQL: debug
+
+jwt:
+  secret: bXktand0LXNlY3JldC1rZXktbXktand0LXNlY3JldC1rZXktMzJieXRlcyEh

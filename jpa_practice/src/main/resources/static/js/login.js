@@ -43,8 +43,9 @@ async function onLoginSubmit(e) {
 
         // 임시: 로그인 유저 ID를 localStorage에 저장 (나중에 JWT/세션으로 교체)
         if (user && user.id) {
-            localStorage.setItem('currentUserId', String(user.id));
-            localStorage.setItem('currentUserNickname', user.nickname || '');
+            localStorage.setItem("accessToken", user.accessToken);
+            localStorage.setItem("refreshToken", user.refreshToken);
+
         }
 
         // 로그인 성공 후 목록 페이지로 이동
