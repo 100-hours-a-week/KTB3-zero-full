@@ -41,15 +41,12 @@ async function onLoginSubmit(e) {
         const user = await res.json();
         console.log('로그인 성공:', user);
 
-        // 임시: 로그인 유저 ID를 localStorage에 저장 (나중에 JWT/세션으로 교체)
-        if (user && user.id) {
-            localStorage.setItem("accessToken", user.accessToken);
-            localStorage.setItem("refreshToken", user.refreshToken);
-
-        }
+        localStorage.setItem("accessToken", user.accessToken);
+        localStorage.setItem("refreshToken", user.refreshToken);
 
         // 로그인 성공 후 목록 페이지로 이동
         window.location.href = '/posts';
+
     } catch (err) {
         console.error('로그인 에러:', err);
         alert('로그인 중 오류가 발생했습니다.');

@@ -1,6 +1,7 @@
 package kr.adapterz.jpa_practice.service;
 
 import kr.adapterz.jpa_practice.entity.user.User;
+import kr.adapterz.jpa_practice.entity.user.UserRole;
 import kr.adapterz.jpa_practice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,7 @@ public class UserService {
 
     @Transactional
     public User create(String email, String password, String nickname) {
-        User user = new User(email, password, nickname);
+        User user = new User(email, password, nickname, UserRole.USER);
         return userRepository.save(user);
     }
 
